@@ -124,7 +124,7 @@ body {
   font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
   line-height: 1.6;
   font-weight: 400;
-  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #222; }
 
 
@@ -307,6 +307,7 @@ li {
 /* Code
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 code {
+  font-family: "Cousine", "Courier";
   padding: .2rem .5rem;
   margin: 0 .2rem;
   font-size: 90%;
@@ -319,6 +320,16 @@ pre > code {
   padding: 1rem 1.5rem;
   white-space: pre; }
 
+
+/* For rendering a purl entry */
+.purl {
+  font-family: "Cousine", "Courier";
+  font-size: 100%;
+  background: white;
+  padding: none;
+  margin: none;
+  border: none;
+}
 
 /* Tables
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
