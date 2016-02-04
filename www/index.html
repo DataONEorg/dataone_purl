@@ -3,16 +3,89 @@
 <head>
   <title>DataONE PURLs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Cousine:400,300,600" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">  
   <link rel="icon" type="image/png" href="images/favicon.png">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script type="text/javascript">
+/**
+List of PURLs in order of display in list. Content is: [PURL, Description]
+*/
+var purls=[
+  ['https://purl.dataone.org/github', 'The DataONE Github site.'],
+  ['https://purl.dataone.org/architecture','DataONE architecture documentation'],
+  ['https://purl.dataone.org/architecture-dev','Development version of architecture documentation'],
+  ['https://purl.dataone.org/MNServices-dev','Development documentation for Member Node service registration.'],
+  ['https://purl.dataone.org/operations','DataONE Operations documentation.'],
+  ['https://purl.dataone.org/integration','Jenkins integration server for DataONE.'],
+  ['https://purl.dataone.org/obo',''],
+  ['https://purl.dataone.org/odo',''],
+  ['https://purl.dataone.org/ontologies','Base of ontology references for DataONE.'],
+  ['https://purl.dataone.org/WBS','Work breakdown structure for DataONE project, phase 2.']
+];
+
+function parseURL(url) {
+  var parser = document.createElement('a');
+  var searchObject = {};
+  var queries;
+  var split;
+  var i;
+  // Let the browser do the work
+  parser.href = url;
+
+  // Convert query string to object
+  queries = parser.search.replace(/^\?/, '').split('&');
+  for ( i = 0; i < queries.length; i++ ) {
+    split = queries[i].split('=');
+    searchObject[split[0]] = split[1];
+  }
+  return {
+    protocol : parser.protocol,
+    host : parser.host,
+    hostname : parser.hostname,
+    port : parser.port,
+    pathname : parser.pathname,
+    search : parser.search,
+    searchObject : searchObject,
+    hash : parser.hash
+  };
+}
+
+function getPURLtd(purl) {
+  // Generate the contents of the column with the PURLs
+  // purl = URL of PURL
+  // Returns html to insert in <TD>
+  var parts = parseURL(purl);
+  var label = parts.hostname + parts.pathname;
+  var a = "<span class='purl'><a href='" + purl + "'>" + label + "</a></span>";
+  return a;
+}
+
+
+function renderPURLs(target) {
+  // Render the PURLs from the purls list
+  var table = $("#" + target)
+  for (var i in purls) {
+    var trow = "<td>" + getPURLtd(purls[i][0]) + "</td>";
+    trow += "<td>" + purls[i][1] + "</td>";
+    table.append("<tr>" + trow + "</tr>");
+   }
+}
+
+
+$( document ).ready(function() {
+  renderPURLs("tpurls");
+});
+
+  </script>
 </head>
 <body>
 
   <div class="container">
     <div class="row">
-      <div class="twelve columns" style="margin-top: 0%">
+      <div class="12 columns" style="margin-top: 0%">
 <p><a href="https://www.dataone.org/"><img src="images/dataone-logo-color-small.jpg" /></a></p>
 
 <table>
@@ -22,47 +95,7 @@
       <th>Comment</th>
     </tr>
   </thead>
-  <tbody>
-    <tr>
-      <td><a href="https://purl.dataone.org/github">purl.dataone.org/github</a></td>
-      <td>The DataONE Github site.</td>
-    </tr>
-    <tr>
-      <td><a href="https://purl.dataone.org/architecture">purl.dataone.org/architecture</a></td>
-      <td>DataONE architecture documentation</td>
-    </tr>
-    <tr>
-      <td><a href="https://purl.dataone.org/architecture-dev">purl.dataone.org/architecture-dev</a></td>
-      <td>Development version of architecture documentation</td>
-    </tr>
-    <tr>
-      <td><a href="https://purl.dataone.org/MNServices-dev">purl.dataone.org/MNServices-dev</a></td>
-      <td>Development documentation for Member Node service registration.</td>
-    </tr>
-    <tr>
-      <td><a href="https://purl.dataone.org/operations">purl.dataone.org/operations</a></td>
-      <td>DataONE Operations documentation.</td>
-    </tr>
-    <tr>
-      <td><a href="https://purl.dataone.org/integration">purl.dataone.org/integration</a></td>
-      <td>Jenkins integration server for DataONE.</td>
-    </tr>
-    <tr>
-      <td><a href="https://purl.dataone.org/obo">purl.dataone.org/obo</a></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td><a href="https://purl.dataone.org/odo">purl.dataone.org/odo</a></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td><a href="https://purl.dataone.org/ontologies">purl.dataone.org/ontologies</a></td>
-      <td>Base of ontology references for DataONE.</td>
-    </tr>
-    <tr>
-      <td><a href="https://purl.dataone.org/WBS">purl.dataone.org/WBS</a></td>
-      <td>Work breakdown structure for DataONE project, phase 2.</td>
-    </tr>
+  <tbody id="tpurls">
   </tbody>
 </table>
 
@@ -70,8 +103,13 @@
 <svg aria-hidden="true" class="octicon octicon-mark-github" height="18" role="img" version="1.1" viewBox="0 0 16 16" width="18"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59 0.4 0.07 0.55-0.17 0.55-0.38 0-0.19-0.01-0.82-0.01-1.49-2.01 0.37-2.53-0.49-2.69-0.94-0.09-0.23-0.48-0.94-0.82-1.13-0.28-0.15-0.68-0.52-0.01-0.53 0.63-0.01 1.08 0.58 1.23 0.82 0.72 1.21 1.87 0.87 2.33 0.66 0.07-0.52 0.28-0.87 0.51-1.07-1.78-0.2-3.64-0.89-3.64-3.95 0-0.87 0.31-1.59 0.82-2.15-0.08-0.2-0.36-1.02 0.08-2.12 0 0 0.67-0.21 2.2 0.82 0.64-0.18 1.32-0.27 2-0.27 0.68 0 1.36 0.09 2 0.27 1.53-1.04 2.2-0.82 2.2-0.82 0.44 1.1 0.16 1.92 0.08 2.12 0.51 0.56 0.82 1.27 0.82 2.15 0 3.07-1.87 3.75-3.65 3.95 0.29 0.25 0.54 0.73 0.54 1.48 0 1.07-0.01 1.93-0.01 2.2 0 0.21 0.15 0.46 0.55 0.38C13.71 14.53 16 11.53 16 8 16 3.58 12.42 0 8 0z"></path></svg></a>
 Manage DataONE PURLs on <a href="https://github.com/DataONEorg/dataone_purl">GitHub</a></p>
 
-<p style="font-size: smaller">DataONE is a collaboration among many partner organizations, and is funded by the US National Science Foundation (NSF) under a Cooperative Agreement. Acknowledgement: This material is based upon work supported by the National Science Foundation under Grant Numbers 0830944 and 1430508. Disclaimer: Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</p>
       </div>
+    </div> <!-- row -->
+    <div class="row">
+    <div class="eight columns">
+<p style="font-size: smaller">DataONE is a collaboration among many partner organizations, and is funded by the US National Science Foundation (NSF) under a Cooperative Agreement. Acknowledgement: This material is based upon work supported by the National Science Foundation under Grant Numbers 0830944 and 1430508. Disclaimer: Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</p>
+    </div>
+    <div class="four columns"></div>
     </div>
   </div>
 <script>
