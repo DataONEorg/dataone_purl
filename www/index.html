@@ -7,8 +7,9 @@
   <link href="https://fonts.googleapis.com/css?family=Cousine:400,300,600" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">  
-  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="icon" type="image/png" href="images/favicon.ico">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="js/coins.js"></script>
   <script type="text/javascript">
 /**
 List of PURLs in order of display in list. Content is: [PURL, Description]
@@ -53,14 +54,23 @@ function parseURL(url) {
   };
 }
 
-function getPURLtd(purl) {
+function getPURLtd(entry) {
   // Generate the contents of the column with the PURLs
   // purl = URL of PURL
   // Returns html to insert in <TD>
-  var parts = parseURL(purl);
+  var parts = parseURL(entry[0]);
   var label = parts.hostname + parts.pathname;
-  var a = "<span class='purl'><a href='" + purl + "'>" + label + "</a></span>";
-  return a;
+  var metadata = {identifier: entry[0],
+                  title: entry[1],
+                  url: entry[0],
+                  creators:[{isInstitution: true,
+                             lastName: 'DataONE.org'}
+                            ]
+                  }
+  var span = generateCOiNS(metadata);
+  span.addClass('purl');
+  span.html("<a href='" + entry[0] + "'>" + label + "</a>");
+  return span;
 }
 
 
@@ -68,15 +78,16 @@ function renderPURLs(target) {
   // Render the PURLs from the purls list
   var table = $("#" + target)
   for (var i in purls) {
-    var trow = "<td>" + getPURLtd(purls[i][0]) + "</td>";
-    trow += "<td>" + purls[i][1] + "</td>";
-    table.append("<tr>" + trow + "</tr>");
+    var trow = $("<tr/>").append($("<td/>").append(getPURLtd(purls[i])));
+    trow.append($("<td/>").html(purls[i][1]));
+    table.append(trow);
    }
 }
 
 
 $( document ).ready(function() {
   renderPURLs("tpurls");
+  notifyZoteroOfUpdates();
 });
 
   </script>
@@ -86,7 +97,7 @@ $( document ).ready(function() {
   <div class="container">
     <div class="row">
       <div class="12 columns" style="margin-top: 0%">
-<p><a href="https://www.dataone.org/"><img src="images/dataone-logo-color-small.jpg" /></a></p>
+<p id="logo"><a href="https://www.dataone.org/"><img src="images/dataone-logo-color-small.jpg" /></a></p>
 
 <table>
   <thead>
