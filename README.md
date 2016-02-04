@@ -3,8 +3,19 @@ PURL configurations for DataONE
 
 This repository contains Apache rewrite rules that implement redirects from purl.dataone.org to various targets.
 
-## Installation
+## Updating Service
 
-ssh to purl.dataone.org and checkout this repository into /usr/local/dataone. The subfolder www is mapped to the server document root, and the subfolder conf is symlinked to /etc/dataone/purl. Any *.conf in the conf subfolder is included in the Apache config.
+After editing rules in conf:
 
-As new rules are added to the configuration, it is beneficial to others to ensure the index.html file is updated as well.
+1. ssh to purl.dataone.org 
+2. cd /usr/local/dataone
+3. git pull https://github.com/DataONEorg/dataone_purl.git
+4. sudo service apache2 reload
+
+## Generally
+
+Entries in conf/*.conf are loaded by the apache virtualhost using an IncludeOptional option.
+
+Anything in www appears in the HTTP server root.
+
+Update the HTML as new rules are added to the configuration, it keeps people happy.
